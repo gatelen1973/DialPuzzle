@@ -29,14 +29,39 @@ const iconProps = {
   strokeLinejoin: 'round' as const,
 }
 
+const CONTAINMENT_ARROW_PATH =
+  'm64.7 30.6v24h-5.08l8.08 14 8.08-14h-5.08l-.000265-24h-5.99'
+
+const CONTAINMENT_OUTER_PATH =
+  'm51.9 11.9h31.7l3.07 11.4.944.391c19.4 8.03 32 26.9 32 47.9 0 2.26-.149 4.53-.445 6.77l-.133 1.01 8.37 8.37-15.8 27.4-11.4-3.06-.809.623c-9.06 6.95-20.2 10.7-31.6 10.7-11.4 6e-5-22.5-3.77-31.6-10.7l-.81-.623-11.4 3.06-15.8-27.4 8.37-8.37-.133-1.01c-.296-2.25-.445-4.51-.445-6.77.000141-21 12.6-39.9 32-47.9l.944-.391z'
+
 export const SYMBOLS: Record<SymbolId, DialSymbol> = {
   containment: {
     id: 'containment',
     label: 'Containment',
     icon: (
-      <svg {...iconProps}>
-        <rect x="5" y="5" width="14" height="14" rx="2" />
-        <path d="M9 12h6M12 9v6" />
+      <svg viewBox="0 0 135 135" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle
+          cx="67.7"
+          cy="71.5"
+          r="33"
+          stroke="currentColor"
+          strokeWidth="var(--containment-stroke-heavy, 6)"
+        />
+        <path
+          d={CONTAINMENT_OUTER_PATH}
+          stroke="currentColor"
+          strokeWidth="var(--containment-stroke-light, 4)"
+        />
+        {[0, 120, 240].map((angle) => (
+          <path
+            key={angle}
+            d={CONTAINMENT_ARROW_PATH}
+            fill="currentColor"
+            stroke="none"
+            transform={`rotate(${angle} 67.7 71.5)`}
+          />
+        ))}
       </svg>
     ),
   },

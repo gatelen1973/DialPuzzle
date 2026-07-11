@@ -1,4 +1,4 @@
-import { useCallback, type MouseEvent } from 'react'
+import { useCallback, type CSSProperties, type MouseEvent } from 'react'
 import type { SymbolId } from './symbols'
 import { SYMBOLS } from './symbols'
 
@@ -77,10 +77,15 @@ export function DialRing({
           {symbolIds.map((id, index) => {
             const angle = index * segmentAngle - 90
             const rad = (angle * Math.PI) / 180
-            const symbolRadius = innerRadius + thickness * 0.45
+            const symbolRadius = innerRadius + thickness * 0.5
             const x = radius + symbolRadius * Math.cos(rad)
             const y = radius + symbolRadius * Math.sin(rad)
             const symbol = SYMBOLS[id]
+            const iconSize = Math.round(thickness * 0.82)
+            const targetStroke = label === 'outer' ? 2.15 : 2.35
+            const symbolStroke = (targetStroke * 24) / iconSize
+            const containmentStrokeHeavy = (1.45 * 135) / iconSize
+            const containmentStrokeLight = (1.1 * 135) / iconSize
 
             return (
               <g
@@ -89,8 +94,24 @@ export function DialRing({
                 className="dial-ring__symbol"
               >
                 <title>{symbol.label}</title>
-                <foreignObject x="-12" y="-12" width="24" height="24">
-                  <div className="dial-ring__icon">{symbol.icon}</div>
+                <foreignObject
+                  x={-iconSize / 2}
+                  y={-iconSize / 2}
+                  width={iconSize}
+                  height={iconSize}
+                >
+                  <div
+                    className="dial-ring__icon"
+                    style={{
+                      width: iconSize,
+                      height: iconSize,
+                      '--symbol-stroke': symbolStroke,
+                      '--containment-stroke-heavy': containmentStrokeHeavy,
+                      '--containment-stroke-light': containmentStrokeLight,
+                    } as CSSProperties}
+                  >
+                    {symbol.icon}
+                  </div>
                 </foreignObject>
               </g>
             )
