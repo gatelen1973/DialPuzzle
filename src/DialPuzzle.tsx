@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { DialRing } from './DialRing'
+import { DungeonDoors } from './DungeonDoors'
+import { playHubFailSound, playPuzzleSolvedSound, playRotateSound } from './sounds'
 import type { SymbolId } from './symbols'
 import { SYMBOLS } from './symbols'
 
@@ -20,6 +22,7 @@ const MIDDLE_SYMBOLS: SymbolId[] = [
   'endurance',
   'cross',
   'star',
+  'eye',
   'moon',
   'diamond',
   'spiral',
@@ -35,7 +38,7 @@ const INNER_SYMBOLS: SymbolId[] = [
 ]
 
 const CORE_SYMBOLS: SymbolId[] = [
-  'containment',
+  'rune',
   'judgment',
   'memory',
   'endurance',
@@ -54,21 +57,42 @@ function getActiveSymbol(ring: RingState): SymbolId {
 
 const OUTER_SIZE = 580
 
+const PUZZLE_SOLUTION = {
+  outer: 'containment',
+  middle: 'eye',
+  inner: 'star',
+  core: 'rune',
+} as const satisfies Record<'outer' | 'middle' | 'inner' | 'core', SymbolId>
+
 export function DialPuzzle() {
   const [outerIndex, setOuterIndex] = useState(0)
   const [middleIndex, setMiddleIndex] = useState(2)
   const [innerIndex, setInnerIndex] = useState(1)
   const [coreIndex, setCoreIndex] = useState(3)
+  const [showDoors, setShowDoors] = useState(false)
+  const [hubShake, setHubShake] = useState(false)
 
   const outerStep = 360 / OUTER_SYMBOLS.length
   const middleStep = 360 / MIDDLE_SYMBOLS.length
   const innerStep = 360 / INNER_SYMBOLS.length
   const coreStep = 360 / CORE_SYMBOLS.length
 
-  const rotateOuter = useCallback(() => setOuterIndex((i) => i + 1), [])
-  const rotateMiddle = useCallback(() => setMiddleIndex((i) => i + 1), [])
-  const rotateInner = useCallback(() => setInnerIndex((i) => i + 1), [])
-  const rotateCore = useCallback(() => setCoreIndex((i) => i + 1), [])
+  const rotateOuter = useCallback(() => {
+    playRotateSound()
+    setOuterIndex((i) => i + 1)
+  }, [])
+  const rotateMiddle = useCallback(() => {
+    playRotateSound()
+    setMiddleIndex((i) => i + 1)
+  }, [])
+  const rotateInner = useCallback(() => {
+    playRotateSound()
+    setInnerIndex((i) => i + 1)
+  }, [])
+  const rotateCore = useCallback(() => {
+    playRotateSound()
+    setCoreIndex((i) => i + 1)
+  }, [])
 
   const activeSymbols = useMemo(
     () => ({
@@ -79,6 +103,27 @@ export function DialPuzzle() {
     }),
     [outerIndex, middleIndex, innerIndex, coreIndex],
   )
+
+  const isSolved = useMemo(
+    () =>
+      activeSymbols.outer === PUZZLE_SOLUTION.outer &&
+      activeSymbols.middle === PUZZLE_SOLUTION.middle &&
+      activeSymbols.inner === PUZZLE_SOLUTION.inner &&
+      activeSymbols.core === PUZZLE_SOLUTION.core,
+    [activeSymbols],
+  )
+
+  const handleHubClick = useCallback(() => {
+    if (isSolved) {
+      playPuzzleSolvedSound()
+      setShowDoors(true)
+      return
+    }
+
+    playHubFailSound()
+    setHubShake(true)
+    window.setTimeout(() => setHubShake(false), 450)
+  }, [isSolved])
 
   return (
     <div className="dial-puzzle">
@@ -148,9 +193,18 @@ export function DialPuzzle() {
             />
           </div>
 
-          <div className="dial-puzzle__hub" aria-hidden="true">
-            <div className="dial-puzzle__hub-inner" />
-          </div>
+          <button
+            type="button"
+            className={`dial-puzzle__hub${isSolved ? ' dial-puzzle__hub--ready' : ''}${hubShake ? ' dial-puzzle__hub--shake' : ''}`}
+            aria-label={
+              isSolved
+                ? 'Activate the dial mechanism. All symbols are aligned.'
+                : 'Activate the dial mechanism'
+            }
+            onClick={handleHubClick}
+          >
+            <span className="dial-puzzle__hub-inner" aria-hidden="true" />
+          </button>
         </div>
         </div>
 
@@ -174,6 +228,8 @@ export function DialPuzzle() {
           </p>
         </aside>
       </div>
+
+      {showDoors ? <DungeonDoors onClose={() => setShowDoors(false)} /> : null}
     </div>
   )
 }

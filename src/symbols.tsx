@@ -13,6 +13,8 @@ export type SymbolId =
   | 'triangle'
   | 'circle'
   | 'cross'
+  | 'eye'
+  | 'rune'
 
 export type DialSymbol = {
   id: SymbolId
@@ -169,6 +171,29 @@ export const SYMBOLS: Record<SymbolId, DialSymbol> = {
     icon: (
       <svg {...iconProps}>
         <path d="M12 4v16M4 12h16" />
+      </svg>
+    ),
+  },
+  eye: {
+    id: 'eye',
+    label: 'Eye',
+    icon: (
+      <svg {...iconProps}>
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+        <circle cx="12" cy="12" r="2.5" />
+      </svg>
+    ),
+  },
+  rune: {
+    id: 'rune',
+    label: 'Elven Rune',
+    icon: (
+      <svg {...iconProps}>
+        <path d="M12 4v16" />
+        <path d="M12 5.5c4.5 0 7 2.5 7 5.8s-2.5 5.7-7 5.7" />
+        <path d="M12 14.5c-3.5 0-6 2.2-6 5s2.5 4.5 6 4.5" />
+        <path d="M6 19.5c2 1.2 4 1.5 6 0.5" />
+        <circle cx="12" cy="3" r="0.9" fill="currentColor" stroke="none" />
       </svg>
     ),
   },
