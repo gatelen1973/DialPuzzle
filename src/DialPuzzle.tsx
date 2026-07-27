@@ -1,6 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import { DialRing } from './DialRing'
 import { DungeonDoors } from './DungeonDoors'
+import type { PuzzleSolution, RingId } from './solution'
+import { loadSolution, saveSolution } from './solution'
+import { SolutionEditor } from './SolutionEditor'
 import { playHubFailSound, playPuzzleSolvedSound, playRotateSound } from './sounds'
 import type { SymbolId } from './symbols'
 import { SYMBOLS } from './symbols'
@@ -57,12 +60,12 @@ function getActiveSymbol(ring: RingState): SymbolId {
 
 const OUTER_SIZE = 580
 
-const PUZZLE_SOLUTION = {
-  outer: 'containment',
-  middle: 'eye',
-  inner: 'star',
-  core: 'rune',
-} as const satisfies Record<'outer' | 'middle' | 'inner' | 'core', SymbolId>
+const RING_OPTIONS: Record<RingId, SymbolId[]> = {
+  outer: OUTER_SYMBOLS,
+  middle: MIDDLE_SYMBOLS,
+  inner: INNER_SYMBOLS,
+  core: CORE_SYMBOLS,
+}
 
 export function DialPuzzle() {
   const [outerIndex, setOuterIndex] = useState(0)
@@ -71,6 +74,10 @@ export function DialPuzzle() {
   const [coreIndex, setCoreIndex] = useState(3)
   const [showDoors, setShowDoors] = useState(false)
   const [hubShake, setHubShake] = useState(false)
+  const [editorOpen, setEditorOpen] = useState(false)
+  const [solution, setSolution] = useState<PuzzleSolution>(() =>
+    loadSolution(RING_OPTIONS),
+  )
 
   const outerStep = 360 / OUTER_SYMBOLS.length
   const middleStep = 360 / MIDDLE_SYMBOLS.length
@@ -106,11 +113,11 @@ export function DialPuzzle() {
 
   const isSolved = useMemo(
     () =>
-      activeSymbols.outer === PUZZLE_SOLUTION.outer &&
-      activeSymbols.middle === PUZZLE_SOLUTION.middle &&
-      activeSymbols.inner === PUZZLE_SOLUTION.inner &&
-      activeSymbols.core === PUZZLE_SOLUTION.core,
-    [activeSymbols],
+      activeSymbols.outer === solution.outer &&
+      activeSymbols.middle === solution.middle &&
+      activeSymbols.inner === solution.inner &&
+      activeSymbols.core === solution.core,
+    [activeSymbols, solution],
   )
 
   const handleHubClick = useCallback(() => {
@@ -125,8 +132,38 @@ export function DialPuzzle() {
     window.setTimeout(() => setHubShake(false), 450)
   }, [isSolved])
 
+  const handleSaveSolution = useCallback((next: PuzzleSolution) => {
+    saveSolution(next)
+    setSolution(next)
+  }, [])
+
   return (
     <div className="dial-puzzle">
+      <button
+        type="button"
+        className="dial-puzzle__edit"
+        aria-label="Edit puzzle solution"
+        onClick={() => setEditorOpen(true)}
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path
+            d="M4 20h4.5L18.5 10l-4.5-4.5L4 15.5V20z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M12.5 7l4.5 4.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+          />
+        </svg>
+        Edit
+      </button>
+
       <header className="dial-puzzle__header">
         <h1>Dial Puzzle</h1>
         <p>Click each ring to rotate it independently.</p>
@@ -230,6 +267,14 @@ export function DialPuzzle() {
       </div>
 
       {showDoors ? <DungeonDoors onClose={() => setShowDoors(false)} /> : null}
+
+      <SolutionEditor
+        open={editorOpen}
+        solution={solution}
+        ringOptions={RING_OPTIONS}
+        onSave={handleSaveSolution}
+        onClose={() => setEditorOpen(false)}
+      />
     </div>
   )
 }
