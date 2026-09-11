@@ -725,3 +725,226 @@ body {
   outline: 2px solid #c9a84c;
   outline-offset: 2px;
 }
+
+.app-nav {
+  position: fixed;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 50;
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  border: 1px solid #4a4438;
+  border-radius: 10px;
+  background: rgba(44, 48, 62, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.app-nav__link {
+  padding: 0.45rem 0.85rem;
+  border-radius: 7px;
+  color: #c9b896;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.app-nav__link:hover {
+  color: #f0e6d2;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.app-nav__link--active {
+  color: #f0e6d2;
+  background: rgba(201, 168, 76, 0.18);
+}
+
+.app-nav__link:focus-visible {
+  outline: 2px solid #c9a84c;
+  outline-offset: 2px;
+}
+
+.symbol-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 5rem 1.5rem 3rem;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.symbol-gallery__header {
+  text-align: center;
+}
+
+.symbol-gallery__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9a9080;
+}
+
+.symbol-gallery__header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #f0e6d2;
+}
+
+.symbol-gallery__header p {
+  margin: 0;
+  color: #9a9080;
+}
+
+.symbol-gallery__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.85rem;
+}
+
+.symbol-gallery__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1.15rem 0.75rem;
+  border: 1px solid #3a3428;
+  border-radius: 12px;
+  background: rgba(58, 62, 78, 0.55);
+  color: #c9b896;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.symbol-gallery__card:hover {
+  border-color: #c9a84c;
+  background: rgba(58, 62, 78, 0.85);
+  color: #f0e6d2;
+  transform: translateY(-2px);
+}
+
+.symbol-gallery__card:focus-visible {
+  outline: 2px solid #c9a84c;
+  outline-offset: 2px;
+}
+
+.symbol-gallery__card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  color: #c9a84c;
+}
+
+.symbol-gallery__card-icon svg {
+  width: 48px;
+  height: 48px;
+}
+
+.symbol-gallery__card-label {
+  font-size: 0.85rem;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.symbol-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.symbol-preview__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(5, 6, 10, 0.78);
+  cursor: pointer;
+}
+
+.symbol-preview__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  padding: 1.5rem 1.5rem 2rem;
+  border: 1px solid #4a4438;
+  border-radius: 16px;
+  background: rgba(34, 38, 50, 0.98);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+}
+
+.symbol-preview__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.symbol-preview__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #f0e6d2;
+  letter-spacing: 0.04em;
+}
+
+.symbol-preview__close {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #4a4438;
+  border-radius: 8px;
+  background: transparent;
+  color: #c9b896;
+  font: inherit;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.symbol-preview__close:hover {
+  border-color: #c9a84c;
+  color: #f0e6d2;
+}
+
+.symbol-preview__close:focus-visible {
+  outline: 2px solid #c9a84c;
+  outline-offset: 2px;
+}
+
+.symbol-preview__icon {
+  display: grid;
+  place-items: center;
+  width: min(260px, 70vw);
+  height: min(260px, 70vw);
+  margin: 0 auto;
+  color: #c9a84c;
+}
+
+.symbol-preview__icon svg {
+  width: 100%;
+  height: 100%;
+}
